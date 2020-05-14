@@ -4,16 +4,20 @@ var express = require("express");
 var cors = require("cors");
 var bodyParser = require("body-parser");
 var Errores_1 = require("./JavaAST/Errores");
+var lista;
 var gramatica = require('./AnalizadorJava/GramaticaJava');
+//const lista_token = require('./AnalizadorJava/GramaticaJava');
 var app = express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/Calcular/', function (req, res) {
+    //lista=lista_token; 
     var entrada = req.body.text;
     var resultado = parser(entrada);
     Errores_1.Errores.clear();
     res.send(resultado.toString());
+    //res.send(lista);  
 });
 /*---------------------------------------------------------------*/
 var server = app.listen(8080, function () {

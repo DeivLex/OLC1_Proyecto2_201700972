@@ -3,7 +3,10 @@ import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import { Errores } from "./JavaAST/Errores";
 
+let lista: Array<string>;
+
 const gramatica = require('./AnalizadorJava/GramaticaJava');
+//const lista_token = require('./AnalizadorJava/GramaticaJava');
 
 var app=express();
 app.use(bodyParser.json());
@@ -11,10 +14,12 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/Calcular/', function (req, res) {
+    //lista=lista_token; 
     var entrada=req.body.text;
     var resultado=parser(entrada);
     Errores.clear();
     res.send(resultado.toString());
+    //res.send(lista);  
 });
 
 /*---------------------------------------------------------------*/

@@ -1,7 +1,8 @@
 
 /*------------------------------------------------IMPORTS----------------------------------------------*/
 %{
-    
+    //let CErrores=require('../JavaAST/Errores');
+    var lista_token = [];
 %}
 
 /*------------------------------------------------LEXICO------------------------------------------------*/
@@ -90,21 +91,11 @@
 /lex
 
 /*--------------------------------------------------SINTACTICO-----------------------------------------------*/
-%left tk_and
-%left tk_or
-%left tk_dist tk_igualdad
-%left tk_menor tk_mayor tk_menorig tk_mayorig
-%left tk_sum tk_res
-%left tk_mul tk_div
-%left  parentesis_izq tk_igual punto_coma
-%left FUNCIONES 
-%right tk_not
-%right UMINUS
 
 %start S
 %% 
 
-S:EXP EOF {  return "Todo bien"; };
+S:EXP EOF {  return "Todo bien: "+lista_token; };
 
 EXP: IMPORTS EXP { }
    | CLASS 
@@ -115,6 +106,36 @@ IMPORTS: IMPORT IMPORTS { }
         | IMPORT;
 
 IMPORT: tk_IMP id punto_coma;
+
+CLASS:  tk_CLASS id llave_izq CUERPO_CLASS llave_der;
+
+
+CUERPO_CLASS: FUN_DE CUERPO_CLASS
+            | ASIGNACION CUERPO_CLASS
+            | MAIN CUERPO_CLASS
+            | ;
+FIN_FUN: parentesis_der llave_izq BFUN llave_der
+        |LIST_PARAM FIN_FUN;
+
+LIST_PARAM: TIPO id tk_coma LIST_PARAM 
+          | TIPO id;
+
+FUN_DE: tk_VOID id parentesis_izq FIN_FUN
+        | TIPO id parentesis_izq FIN_FUN
+        | TIPO LISTA_ID FIN_DE;
+
+FIN_DE:  punto_coma { }
+        | tk_igual EXPRESION punto_coma {};
+
+LISTA_ID:  id tk_coma LISTA_ID      { lista_token.push($1); }
+        | id {lista_token.push(yytext);} ;
+
+
+
+ASIGNACION: id tk_igual EXPRESION punto_coma      {   };
+
+
+
 
 
 EXPRESION: EXPRESION tk_mayor EXPRESION     {   }
@@ -132,9 +153,10 @@ EXPRESION: EXPRESION tk_mayor EXPRESION     {   }
          | EXPRESION tk_incr
          | EXPRESION tk_decr
          | tk_res EXPRESION  %prec UMINUS   {   }
-         | parentesis_izq EXPRESION  parentesis_izq   {   }
+         | parentesis_izq EXPRESION  parentesis_der   {   }
          | EXPRESION tk_res EXPRESION       {   }
          | id
+         | tk_NULL
          | cadena
          | entero
          | decimal
@@ -143,9 +165,6 @@ EXPRESION: EXPRESION tk_mayor EXPRESION     {   }
          | tk_TRUE
          | tk_FALSE
          | CALL_FUNCT;
-
-
-ASIGNACION: id tk_igual EXPRESION punto_coma      {   };
 
 
 CALL_FUNCT: id parentesis_izq LISTA_EXP parentesis_der 
@@ -182,7 +201,8 @@ NUMEROS: NUMEROS tk_sum NUMEROS       {   }
        | tk_NULL
        | tk_not NUMEROS
        | CALL_FUNCT
-       | id;
+       | id
+       | cadena;
 
 TERMINAL: id
         | cadena
@@ -208,15 +228,12 @@ DO: tk_DO llave_izq CICLOS llave_der tk_WHILE parentesis_izq CONDICION parentesi
 FOR: tk_FOR parentesis_izq DEC_ASIG  CONDICION punto_coma INC_DEC parentesis_der llave_izq CICLOS llave_der;
 
 DEC_ASIG: ASIGNACION
-        | DECLARACION;
+        | FUN_DE;
 
 INC_DEC: id tk_decr
        | id tk_incr
        | tk_incr id
        | tk_decr id;
-
-LIST_PARAM: TIPO id tk_coma LIST_PARAM 
-          | TIPO id;
 
 PRINT: tk_SYSTEM tk_punto tk_out tk_punto tk_PRINTLN parentesis_izq EXPRESION parentesis_der punto_coma
      | tk_SYSTEM tk_punto tk_out tk_punto tk_PRINT parentesis_izq EXPRESION parentesis_der punto_coma;
@@ -233,25 +250,6 @@ CASES: tk_CASE EXPRESION tk_dpunt BCASOS CASES
 BREAK: tk_BRAKE punto_coma;
 
 CONTINUE: tk_CONTINUE punto_coma;
-
-
-CLASS:  tk_CLASS id llave_izq CUERPO_CLASS llave_der;
-
-
-
-CUERPO_CLASS: FUNCIONES CUERPO_CLASS
-            | ASIGNACION CUERPO_CLASS
-            | MAIN CUERPO_CLASS
-            | ;
-
-FUNCIONES: VD_TP parentesis_izq LIST_PARAM parentesis_der llave_izq BFUN llave_der
-         | VD_TP parentesis_izq parentesis_der llave_izq BFUN llave_der
-         | VD_TP;
-
-VD_TP: tk_VOID
-        | TIPO LISTA_ID  punto_coma
-        | TIPO LISTA_ID tk_igual EXPRESION punto_coma
-        | TIPO id;
 
 BLOQUEC:llave_izq BM llave_der;
 
@@ -273,7 +271,9 @@ SENTENCIA: IF_ELSE
  | SWITCH
  | ASIGNACION
  | EXPRESION punto_coma
- | DECLARACION ;
+ | FUN_DE 
+ | BREAK
+ | RETURN;
  
 BCASOS: SENTENCIA BCASOS
       | SENTENCIA
@@ -290,8 +290,6 @@ CICLOS: SENTENCIA CICLOS
       |;
 
 //PARECIDA A BLOQUE SOLO QUE SIN LLAVE Y EXCEPTUANDO DECLA FUNT/METOD
-
-LISTA_ID:  id tk_coma LISTA_ID      {   };
 
 TIPO: tk_INT        {   }
     | tk_DOUBLE     {   }
