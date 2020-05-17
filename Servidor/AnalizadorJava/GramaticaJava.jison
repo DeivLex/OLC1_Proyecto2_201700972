@@ -3,6 +3,8 @@
 %{
     //let CErrores=require('../JavaAST/Errores');
     var lista_token = [];
+    var list_var = "";
+    var tipo_var = "";
 %}
 
 /*------------------------------------------------LEXICO------------------------------------------------*/
@@ -84,7 +86,7 @@
 
 [ \t\r\n\f] %{ /*se ignoran*/ %}
 
-<<EOF>>     %{  return 'EOF';   %}
+<<EOF>>     %{  return 'EOF';  %}
 
 .          console.log("Error lexico:",yytext,"Linea:",yylineno);
 
@@ -95,10 +97,10 @@
 %start S
 %% 
 
-S:EXP EOF {  return "Todo bien: "+lista_token; };
+S:EXP EOF {  return lista_token; };
 
 EXP: IMPORTS EXP { }
-   | CLASS 
+   | CLASS EXP
    |;
 
 
@@ -107,7 +109,7 @@ IMPORTS: IMPORT IMPORTS { }
 
 IMPORT: tk_IMP id punto_coma;
 
-CLASS:  tk_CLASS id llave_izq CUERPO_CLASS llave_der;
+CLASS:  tk_CLASS id llave_izq CUERPO_CLASS llave_der { lista_token.push("class-"+$2); } ;
 
 
 CUERPO_CLASS: FUN_DE CUERPO_CLASS
@@ -122,13 +124,13 @@ LIST_PARAM: TIPO id tk_coma LIST_PARAM
 
 FUN_DE: tk_VOID id parentesis_izq FIN_FUN
         | TIPO id parentesis_izq FIN_FUN
-        | TIPO LISTA_ID FIN_DE;
+        | TIPO LISTA_ID FIN_DE { tipo_var = $1; lista_token.push(tipo_var+"-"+list_var); list_var=""; };
 
 FIN_DE:  punto_coma { }
         | tk_igual EXPRESION punto_coma {};
 
-LISTA_ID:  id tk_coma LISTA_ID      { lista_token.push($1); }
-        | id {lista_token.push(yytext);} ;
+LISTA_ID:  id tk_coma LISTA_ID  { list_var+="."+$1; }
+        | id { list_var+= $1; } ;
 
 
 

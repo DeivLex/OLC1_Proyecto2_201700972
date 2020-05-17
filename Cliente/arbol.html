@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Reporte AST</title>
+	<style>
+	html { margin:0; padding:0; font-size:62.5%; }
+	body { max-width:800px; min-width:300px; margin:0 auto; padding:20px 10px; font-size:14px; font-size:1.4em; }
+	h1 { font-size:1.8em; }
+	.demo { overflow:auto; border:1px solid silver; min-height:100px; }
+	</style>
+	<link rel="stylesheet" href="./../dist/themes/default/style.min.css" />
+</head>
+<body>
+
+
+	<h1>Reporte AST</h1>
+	<div id="html" class="demo">
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="./../dist/jstree.min.js"></script>
+	<script>
+		var url='http://localhost:8080/Arbol/';
+		var hola= [
+		{ "id" : "1", "parent" : "#", "text" : "Raiz" },
+		{ "id" : "2", "parent" : "1", "text" : "Clases" },
+		{ "id" : "3", "parent" : "2", "text" : "Funciones" },
+		{ "id" : "4", "parent" : "3", "text" : "Variables" },
+		];
+		$.get(url,function(data,status){
+			if(status.toString()=="success"){
+				alert("Reporte AST completo!!!");
+				//------------------------
+				var res = data.split(",");
+				for (let index = 0; index < res.length; index++) {
+					const element = res[index];
+					hola.push({ "id" : (index+5).toString() , "parent" : "#", "text" : element.toString() });	
+				}
+				//Arbol-----------------------
+				$('#html').jstree({ 'core' : {
+				'data' : hola
+				} });
+			}else{
+				alert("Error al cargar el AST, estado de conexion:"+status);
+			}
+		});
+	</script>
+</body>
+</html>

@@ -6,20 +6,21 @@ import { Errores } from "./JavaAST/Errores";
 let lista: Array<string>;
 
 const gramatica = require('./AnalizadorJava/GramaticaJava');
-//const lista_token = require('./AnalizadorJava/GramaticaJava');
-
+var resultado="";
 var app=express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/Calcular/', function (req, res) {
-    //lista=lista_token; 
     var entrada=req.body.text;
-    var resultado=parser(entrada);
+    resultado=parser(entrada);
     Errores.clear();
-    res.send(resultado.toString());
-    //res.send(lista);  
+    res.send(resultado.toString()); 
+});
+
+app.get('/Arbol/', function (req, res) {
+    res.send(resultado.toString()); 
 });
 
 /*---------------------------------------------------------------*/
