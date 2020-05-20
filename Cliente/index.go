@@ -21,6 +21,7 @@ func main() {
 	http.Handle("/fonts/", http.StripPrefix("/fonts/", http.FileServer(http.Dir("fonts/"))))
 	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("js/"))))
 	http.Handle("/dist/", http.StripPrefix("/dist/", http.FileServer(http.Dir("dist/"))))
+	http.Handle("/codemirror/", http.StripPrefix("/codemirror/", http.FileServer(http.Dir("codemirror/"))))
 
 
 	http.HandleFunc("/", index)

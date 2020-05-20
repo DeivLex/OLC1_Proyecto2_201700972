@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ejemplo</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="../css/layout.css" rel="stylesheet" type="text/css" media="all">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
+    <script src="jquery-1.7.2.min.js"></script>
     <script src="../js/index.js"></script>
+
+    <script src="../codemirror/lib/codemirror.js"></script>
+    <link rel="stylesheet" href="../codemirror//lib//codemirror.css">
+    <link rel="stylesheet" href="../codemirror//theme//eclipse.css">
+    <script src="../codemirror/mode/clike/clike.js"></script>
+    <title>Detector de copias</title>
   </head>
   <body>
+    <div class="contenedor">
+      <input id="fileInput" title="Abrir" type="file" size="50" onchange="AbrirArchivo(this.files)" class="btnp">
+      <button onclick="DescargarArchivo();" id="guardar" title="Guardar" class="btnp">Guardar</button>
+      <button onclick="agregar();" title="AgregarPestana" id="btn4" class="btnp">Agregar Pestana</button>
+      <button onclick="quitar();" title="QuitarPestana" id="btn5" class="btnp">Quitar Pestana</button>
+      
+      <div id="pestanas">
+          <ul id=lista>
+          </ul>
+      </div>
 
-    <div class="wrapper row3">
-      <main class="container clear">
-        <div class="group" id="div">
-          <textarea id="operacion" rows="20" cols="70"></textarea>
-          <button onclick="Conn()">Calcular</button>
-          
-        </div>
-        <div class="clear"></div>
-      </main>
+      <body>
+          <div id="contenidopestanas">
+          </div>
+      </body>
+      <button onclick="Conn()">Cargar Original</button>
+      <button onclick="Conn()">Cargar Copia</button>
     </div>
-
     <script src="../js/jquery.min.js"></script>
     <script src="../js/jquery.backtotop.js"></script>
     <script src="../js/jquery.mobilemenu.js"></script>

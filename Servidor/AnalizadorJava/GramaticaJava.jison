@@ -109,7 +109,7 @@ IMPORTS: IMPORT IMPORTS { }
 
 IMPORT: tk_IMP id punto_coma;
 
-CLASS:  tk_CLASS id llave_izq CUERPO_CLASS llave_der { lista_token.push("class-"+$2); } ;
+CLASS:  tk_CLASS id llave_izq CUERPO_CLASS llave_der { lista_token.unshift("class-"+$2); } ;
 
 
 CUERPO_CLASS: FUN_DE CUERPO_CLASS
@@ -122,9 +122,9 @@ FIN_FUN: parentesis_der llave_izq BFUN llave_der
 LIST_PARAM: TIPO id tk_coma LIST_PARAM 
           | TIPO id;
 
-FUN_DE: tk_VOID id parentesis_izq FIN_FUN
-        | TIPO id parentesis_izq FIN_FUN
-        | TIPO LISTA_ID FIN_DE { tipo_var = $1; lista_token.push(tipo_var+"-"+list_var); list_var=""; };
+FUN_DE: tk_VOID id parentesis_izq FIN_FUN {lista_token.unshift("funcion-"+$2);}
+        | TIPO id parentesis_izq FIN_FUN { lista_token.unshift("funcion-"+$2); }
+        | TIPO LISTA_ID FIN_DE { tipo_var = $1; lista_token.unshift(tipo_var+"-"+list_var); list_var=""; };
 
 FIN_DE:  punto_coma { }
         | tk_igual EXPRESION punto_coma {};
@@ -146,6 +146,8 @@ EXPRESION: EXPRESION tk_mayor EXPRESION     {   }
          | EXPRESION tk_mayorig EXPRESION   {   }
          | EXPRESION tk_igualdad EXPRESION  {   }
          | EXPRESION tk_dist EXPRESION      {   }
+         | EXPRESION tk_and EXPRESION      {   }
+         | EXPRESION tk_or EXPRESION      {   }
          | tk_not EXPRESION                 {   }
          | EXPRESION tk_sum EXPRESION       {   }
          | EXPRESION tk_res EXPRESION       {   }
@@ -179,13 +181,15 @@ LISTA_EXP: EXPRESION tk_coma LISTA_EXP      {   }
 
 CONDICION: CONDICION OPERADOR CONDICION
          | NUMEROS OPERADORLOG NUMEROS
+         | parentesis_izq CONDICION parentesis_der
          | tk_FALSE {   }
          | tk_TRUE  {   }
          | NUMEROS;
 
 
 OPERADOR: tk_and
-        | tk_or;
+        | tk_or
+        | tk_igualdad;
 
 OPERADORLOG: tk_mayor
            | tk_menor
@@ -194,7 +198,8 @@ OPERADORLOG: tk_mayor
            | tk_igualdad
            | tk_dist;
          
-NUMEROS: NUMEROS tk_sum NUMEROS       {   }
+NUMEROS:parentesis_izq NUMEROS parentesis_der 
+       |NUMEROS tk_sum NUMEROS       {   }
        | NUMEROS tk_res NUMEROS       {   }
        | NUMEROS tk_mul NUMEROS       {   }
        | NUMEROS tk_div NUMEROS       {   }
@@ -240,7 +245,7 @@ INC_DEC: id tk_decr
 PRINT: tk_SYSTEM tk_punto tk_out tk_punto tk_PRINTLN parentesis_izq EXPRESION parentesis_der punto_coma
      | tk_SYSTEM tk_punto tk_out tk_punto tk_PRINT parentesis_izq EXPRESION parentesis_der punto_coma;
 
-MAIN: tk_VOID tk_MAIN parentesis_izq parentesis_der llave_izq BFUN llave_der;
+MAIN: tk_VOID tk_MAIN parentesis_izq parentesis_der llave_izq BFUN llave_der {lista_token.unshift("funcion-main");};
 
 //EN LOS CASE SIEMPRE DEBEN DE VENIR CON BREAK
 SWITCH: tk_SW parentesis_izq EXPRESION parentesis_der llave_izq CASES llave_der;
