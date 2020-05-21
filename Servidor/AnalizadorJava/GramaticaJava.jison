@@ -1,7 +1,8 @@
 
 /*------------------------------------------------IMPORTS----------------------------------------------*/
 %{
-    //let CErrores=require('../JavaAST/Errores');
+    let CErrores=require('../JavaAST/Errores');
+    let CNodoError=require('../JavaAST/NodoError');
     var lista_token = [];
     var list_var = "";
     var tipo_var = "";
@@ -88,7 +89,7 @@
 
 <<EOF>>     %{  return 'EOF';  %}
 
-.          console.log("Error lexico:",yytext,"Linea:",yylineno);
+.          CErrores.Errores.add(new CNodoError.NodoError("Lexico","No se esperaba el caracter: "+yytext,yylineno));
 
 /lex
 

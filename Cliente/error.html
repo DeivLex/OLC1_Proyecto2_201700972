@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Reporte Errores</title>
+</head>
+<body onload="cargar()">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+        function cargar(){
+            alert("Reporte Error completo!!!");
+            var url='http://localhost:8080/Error/';
+            $.get(url,function(data,status){
+                document.body.innerHTML+=data.toString();
+            });
+        }
+	</script>
+</body>
+</html>

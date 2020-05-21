@@ -15,12 +15,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/Calcular/', function (req, res) {
     var entrada=req.body.text;
     resultado=parser(entrada);
-    Errores.clear();
     res.send(resultado.toString()); 
 });
 
 app.get('/Arbol/', function (req, res) {
     res.send(resultado.toString()); 
+});
+
+app.get('/Error/', function (req, res) {
+    res.send(Errores.geterror()); 
 });
 
 /*---------------------------------------------------------------*/

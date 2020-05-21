@@ -128,6 +128,7 @@ parseError: function parseError (str, hash) {
 },
 parse: function parse(input) {
     lista_token = [];
+    CErrores.Errores.clear();
     var self = this, stack = [0], tstack = [], vstack = [null], lstack = [], table = this.table, yytext = '', yylineno = 0, yyleng = 0, recovering = 0, TERROR = 2, EOF = 1;
     var args = lstack.slice.call(arguments, 1);
     var lexer = Object.create(this.lexer);
@@ -265,7 +266,8 @@ parse: function parse(input) {
     return true;
 }};
 
-    //let CErrores=require('../JavaAST/Errores');
+    let CErrores=require('../JavaAST/Errores');
+    let CNodoError=require('../JavaAST/NodoError');
     var lista_token = [];
     var list_var = "";
     var tipo_var = "";
@@ -725,7 +727,7 @@ case 62: /*se ignoran*/
 break;
 case 63:  return 5;  
 break;
-case 64:console.log("Error lexico:",yy_.yytext,"Linea:",yy_.yylineno);
+case 64:CErrores.Errores.add(new CNodoError.NodoError("Lexico","No se esperaba el caracter: "+yy_.yytext,yy_.yylineno));
 break;
 }
 },

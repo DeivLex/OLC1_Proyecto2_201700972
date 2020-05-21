@@ -25,7 +25,7 @@ class Errores extends Array<NodoError>{
             cad+="</header>\n";
             cad+="<body background=\"gray\">\n";
                 cad+="<div align=\"center\">\n";
-                    cad+="<h1>Reporte de Errores de Compilacion</h1>\n";
+                    cad+="<h1>Reporte de Errores</h1>\n";
                     cad+="<table border=\"2\" align=\"center\">\n";
                         cad+="<tr>\n";
                             cad+="<th>TIPO DE ERROR</th><th>DESCRIPCION</th><th>LINEA</th>\n";

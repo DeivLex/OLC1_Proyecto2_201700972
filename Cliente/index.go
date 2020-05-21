@@ -16,6 +16,11 @@ func arbol(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w,"")
 }
 
+func errores(w http.ResponseWriter, r *http.Request) {
+	t := template.Must(template.ParseFiles("error.html"))
+	t.Execute(w,"")
+}
+
 func main() {
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css/"))))
 	http.Handle("/fonts/", http.StripPrefix("/fonts/", http.FileServer(http.Dir("fonts/"))))
@@ -26,6 +31,7 @@ func main() {
 
 	http.HandleFunc("/", index)
 	http.HandleFunc("/arbol", arbol)
+	http.HandleFunc("/error", errores)
 
 	fmt.Printf("Servidor escuchando en: http://localhost:8000/")
 	http.ListenAndServe(":8000", nil)
