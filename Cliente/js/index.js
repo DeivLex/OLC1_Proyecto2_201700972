@@ -2,16 +2,29 @@ function Conn(){
 
     var texto=document.getElementById(get_vent()).value;
     console.log(texto);
+    var x = document.getElementById("mySelect").value;
+    if(x=="Original"){
+        var url='http://localhost:8080/Cargar/';
+        $.post(url,{text:texto},function(data,status){
+            if(status.toString()=="success"){
+                alert("Cargado Correctamente");
+            }else{
+                alert("Error estado de conexion:"+status);
+            }
+        });
+    }else if (x=="Copia"){
+        var url='http://localhost:8080/CargarCopia/';
+        $.post(url,{text:texto},function(data,status){
+            if(status.toString()=="success"){
+                alert("Cargado Correctamente");
+            }else{
+                alert("Error estado de conexion:"+status);
+            }
+        });
+    }else{
+        alert("Seleccione una opcion");
+    }
 
-    var url='http://localhost:8080/Calcular/';
-
-    $.post(url,{text:texto},function(data,status){
-        if(status.toString()=="success"){
-            alert("El resultado es: "+data.toString());
-        }else{
-            alert("Error estado de conexion:"+status);
-        }
-    });
 }
 var contador=0;
 function get_cont(){
@@ -83,7 +96,7 @@ function index(pestanias, pestania) {
             value: tact.value,
             matchBrackets: true,
             styleActiveLine: true,
-            theme: "eclipse",
+            theme: "dracula",
             mode: "text/x-java"
         }).on('change', editor => {
             tact.value=editor.getValue();
@@ -125,7 +138,7 @@ function agregar() {
         value: tact.value,
         matchBrackets: true,
         styleActiveLine: true,
-        theme: "eclipse",
+        theme: "dracula",
         mode: "text/x-java"
     }).on('change', editor => {
         tact.value=editor.getValue();
@@ -162,7 +175,7 @@ function AbrirArchivo(files){
             value: tact.value,
             matchBrackets: true,
             styleActiveLine: true,
-            theme: "eclipse",
+            theme: "dracula",
             mode: "text/x-java"
         }).on('change', editor => {
             tact.value=editor.getValue();

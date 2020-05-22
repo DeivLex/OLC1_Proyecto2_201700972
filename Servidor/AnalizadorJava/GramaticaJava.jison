@@ -108,7 +108,8 @@ EXP: IMPORTS EXP { }
 IMPORTS: IMPORT IMPORTS { }
         | IMPORT;
 
-IMPORT: tk_IMP id punto_coma;
+IMPORT: tk_IMP id punto_coma
+        |error {CErrores.Errores.add(new CNodoError.NodoError("Sintactico","No se esperaba el caracter: "+yytext,yylineno));};
 
 CLASS:  tk_CLASS id llave_izq CUERPO_CLASS llave_der { lista_token.unshift("class-"+$2); } ;
 
@@ -128,14 +129,16 @@ FUN_DE: tk_VOID id parentesis_izq FIN_FUN {lista_token.unshift("funcion-"+$2);}
         | TIPO LISTA_ID FIN_DE { tipo_var = $1; lista_token.unshift(tipo_var+"-"+list_var); list_var=""; };
 
 FIN_DE:  punto_coma { }
-        | tk_igual EXPRESION punto_coma {};
+        | tk_igual EXPRESION punto_coma
+        |error {CErrores.Errores.add(new CNodoError.NodoError("Sintactico","No se esperaba el caracter: "+yytext,yylineno));};
 
 LISTA_ID:  id tk_coma LISTA_ID  { list_var+="."+$1; }
         | id { list_var+= $1; } ;
 
 
 
-ASIGNACION: id tk_igual EXPRESION punto_coma      {   };
+ASIGNACION: id tk_igual EXPRESION punto_coma
+        |error {CErrores.Errores.add(new CNodoError.NodoError("Sintactico","No se esperaba el caracter: "+yytext,yylineno));};
 
 
 

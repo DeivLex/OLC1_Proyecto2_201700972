@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <title>Reporte Copia</title>
+    <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+    </style>
+</head>
+<body onload="cargar()">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+        function cargar(){
+            alert("Reporte Copia completo!!!");
+            var url='http://localhost:8080/Copia/';
+            $.get(url,function(data,status){
+                var insert="<table style=\"width:100%\"><tr><th>Clase</th><th>Cantidad Metodos Y/O Funciones</th></tr>";
+                var mostrarClass = "";
+                var ListaCopiaClass = [];
+                var contadorFun = 0;
+                var res = data.split("&_&_&");
+                var original = res[0].split(",");
+                var copia = res[1].split(",");
+                //Copia Clases
+                for (let index = original.length-1; index > -1; index--) {
+                    const element = original[index];
+                    var originalClass =  element.split("-");
+                    console.log(originalClass);
+                    if(originalClass[0]=="class"){
+                        mostrarClass=originalClass[1];
+                        ListaCopiaClass.push(mostrarClass);
+                        ListaCopiaClass.push(contadorFun);
+                        contadorFun=0;
+                    }else if(originalClass[0]=="funcion"){
+                        contadorFun++;
+                    }
+                }
+                for (let index = copia.length-1; index > -1; index--) {
+                    const element = copia[index];
+                    var originalClass =  element.split("-");
+                    if(originalClass[0]=="class"){
+                        mostrarClass=originalClass[1];
+                        for (let index = 0; index < ListaCopiaClass.length; index++) {
+                            if(ListaCopiaClass[index]==mostrarClass && ListaCopiaClass[index+1]==contadorFun){
+                                insert+="<tr><td>"+mostrarClass+"</td><td>"+contadorFun+"</td></tr>";
+                            }   
+                        }
+                        contadorFun=0;
+                    }else if(originalClass[0]=="funcion"){
+                        contadorFun++;
+                    }
+                }
+                insert+="</table><br>";
+                //Copia funciones
+                
+                document.body.innerHTML+=insert;
+            });
+        }
+	</script>
+</body>
+</html>
